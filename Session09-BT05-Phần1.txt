@@ -1,0 +1,27 @@
+Session09-BT05-Phần1,3 
+- Phần 1: 
+	+ Trình bày sơ đồ luồng hoạt động (Data flow) và giải thích công cụ nào của Spring sẽ "đánh chặn" URL để nhận diện yêu cầu đổi ngôn ngữ:
+		+ Sơ đồ: User gửi request url http://localhost:8080/?lang=jp
+					|
+					v
+			DispatcherServlet nhận request
+					|
+					v
+			LocaleChangeInterceptor “đánh chặn” (Nó check:Request có ?lang không? nếu có thì xử lý tiếp nếu không thì bỏ qua
+					|
+					v
+				Set Locale
+					|
+					V
+			CookieLocaleResolver lưu lại (30 ngày hoặc bao nhiêu ngày tùy dev)
+					|
+					v
+				Controller trả về view
+					|
+					v
+			Thymeleaf #{key} → lấy text từ file language_jp.properties
+		+ Công cụ Spring sẽ "Đánh chặn" URL để nhận diện yêu cầu đổi ngôn ngữ là: LocaleChangeInterceptor
+	+ Chọn CookieLocaleResolver vì nếu sử dụng Session thì sau khi tắt trình duyệt thì sẽ ko "nhớ" còn dùng cookie thì sẽ "nhớ"
+
+- Phần 3: hệ thống của bạn đã xử lý thành công bẫy dữ liệu "Khách nhập URL ?lang=ar" như thế nào theo đúng chuẩn Fallback của Spring mà không bị sập:
+	Khi khách nhập url ?lang=ar thì hệ thống sẽ kiểm tra có file language_ar.properties không. Nếu không có thì sẽ fallback về language.properties
